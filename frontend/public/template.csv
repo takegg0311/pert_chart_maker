@@ -1,0 +1,9 @@
+id,name,duration,predecessors
+A,要件定義,3,
+B,基本設計,5,A
+C,バックエンド,8,B
+D,フロントエンド,6,B
+E,DB構築,4,B
+F,API結合テスト,3,C|E
+G,UIテスト,3,D
+H,統合テスト,5,F|G

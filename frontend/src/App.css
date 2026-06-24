@@ -1,0 +1,53 @@
+.idle-screen {
+  max-width: 720px;
+  margin: 80px auto;
+  text-align: center;
+}
+
+.mode-cards {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.card {
+  flex: 1;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 32px 16px;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon {
+  font-size: 40px;
+}
+
+.error {
+  color: #c0392b;
+  background: #fdecea;
+  border: 1px solid #f5c6c0;
+  border-radius: 6px;
+  padding: 12px;
+  margin-top: 16px;
+  white-space: pre-wrap;
+  text-align: left;
+}
+
+.app header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.mode-badge {
+  font-weight: 500;
+  margin-right: auto;
+}
