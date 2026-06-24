@@ -52,11 +52,35 @@ uvicorn main:app --reload --port 8000
 
 ### デプロイ（Firebase Hosting）
 
+本番URL: https://pert-chart.web.app（Firebase プロジェクト配下に追加した Hosting サイト `pert-chart`）
+
+`frontend/.firebaserc` はプロジェクトIDを含むため gitignore 対象。初回のみ以下で生成する。
+
+```bash
+cd frontend
+cp .firebaserc.example .firebaserc   # default とサイトIDを自分のものに書き換える
+firebase hosting:sites:create <your-site-id>   # 専用サブドメイン（<site-id>.web.app）が必要な場合
+firebase target:apply hosting pert-chart <your-site-id>
+```
+
+手動デプロイ:
+
 ```bash
 cd frontend
 npm run build
-firebase deploy --only hosting
+firebase deploy --only hosting:pert-chart
 ```
+
+main ブランチへの push 時は GitHub Actions（[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)）が自動デプロイを実行する。CI は `.firebaserc` を使わず `vars.FIREBASE_PROJECT_ID` とワークフロー内の `target: pert-chart` でデプロイ先を指定するため、リポジトリをフォークしても自分の Secrets/Variables を設定するだけで動く（site-id を変える場合は `target` の値も変更する）。以下を GitHub リポジトリに設定すること。
+
+| 種別 | キー | 内容 |
+|------|------|------|
+| Secret | `FIREBASE_SERVICE_ACCOUNT_<PROJECT_ID>` | `firebase init hosting:github` で発行されるサービスアカウントの JSON 全文。Secret 名はプロジェクトIDに依存するため、フォーク先では `.github/workflows/deploy.yml` の `firebaseServiceAccount` 参照名も合わせて変更すること |
+| Secret | `VITE_FIREBASE_API_KEY` | （将来 Firebase SDK を組み込む場合のみ）`.env.example` 参照 |
+| Secret | `VITE_FIREBASE_AUTH_DOMAIN` | （将来 Firebase SDK を組み込む場合のみ）`.env.example` 参照 |
+| Variable | `FIREBASE_PROJECT_ID` | デプロイ先の Firebase プロジェクト ID |
+
+フロントエンドの環境変数はローカル開発時 `frontend/.env`（gitignore 済み）に設定し、`frontend/.env.example` をテンプレートとして使う。現時点ではアプリ自体は環境変数を使用していない（CSV モードのみで完結）ため、これらは将来 Firebase SDK をクライアントに組み込む際の雛形。
 
 ## ドキュメント
 
