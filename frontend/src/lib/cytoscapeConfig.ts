@@ -18,7 +18,12 @@ export const cytoscapeStyle = [
       'background-color': '#ffffff',
       'border-color': '#b4b2a9',
       'border-width': 0.5,
-      label: '',
+      label: (ele: any) => `${ele.data('name')}\n${ele.data('duration')}日`,
+      'text-wrap': 'wrap',
+      'text-valign': 'center',
+      'text-halign': 'center',
+      'font-size': 12,
+      color: '#08060d',
     },
   },
   {
