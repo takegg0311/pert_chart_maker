@@ -1,0 +1,43 @@
+.duration-legend {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 16px;
+  border-top: 1px solid #eee;
+  font-size: 12px;
+  color: #6b6960;
+}
+
+.duration-legend__title {
+  font-weight: 600;
+  color: #08060d;
+}
+
+.duration-legend__items {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.duration-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.duration-legend__swatch {
+  background-color: #ffffff;
+  border: 1px solid #b4b2a9;
+  border-radius: 2px;
+}
+
+.duration-legend__item--critical {
+  margin-left: auto;
+}
+
+.duration-legend__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #E24B4A;
+}
