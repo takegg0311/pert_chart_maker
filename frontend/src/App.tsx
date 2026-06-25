@@ -1,8 +1,10 @@
 import { useState, useRef } from 'react';
 import { PertGraph } from './components/PertGraph';
+import { CPMPanel } from './components/CPMPanel';
+import { DurationLegend } from './components/DurationLegend';
 import { parseCSV, validateTasks } from './lib/csvParser';
 import { useTasks } from './hooks/useTasks';
-import type { Task } from './types';
+import type { Task, CPMResult } from './types';
 import './App.css';
 
 type Mode = 'idle' | 'csv' | 'backend';
@@ -12,6 +14,7 @@ function App() {
   const [csvTasks, setCsvTasks] = useState<Task[]>([]);
   const [csvError, setCsvError] = useState<string | null>(null);
   const [apiUrl, setApiUrl] = useState('');
+  const [cpm, setCpm] = useState<CPMResult | null>(null);
   const { tasks: dbTasks, connect } = useTasks();
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -49,7 +52,7 @@ function App() {
     }
   };
 
-  const reset = () => { setMode('idle'); setCsvTasks([]); setCsvError(null); };
+  const reset = () => { setMode('idle'); setCsvTasks([]); setCsvError(null); setCpm(null); };
 
   if (mode === 'idle') {
     return (
@@ -94,7 +97,9 @@ function App() {
         <button onClick={reset}>← 戻る</button>
       </header>
       {csvError && <pre className="error">{csvError}</pre>}
-      <PertGraph tasks={activeTasks} />
+      <PertGraph tasks={activeTasks} onCpmComputed={setCpm} />
+      <DurationLegend />
+      {cpm && <CPMPanel cpm={cpm} />}
     </div>
   );
 }

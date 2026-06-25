@@ -1,0 +1,51 @@
+.cpm-panel {
+  border-top: 1px solid #eee;
+  padding: 12px 16px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.cpm-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.cpm-panel__header h3 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.cpm-panel__header span {
+  font-size: 12px;
+  color: #6b6960;
+}
+
+.cpm-panel__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.cpm-panel__table th,
+.cpm-panel__table td {
+  padding: 4px 8px;
+  text-align: right;
+  border-bottom: 1px solid #f0efe9;
+}
+
+.cpm-panel__table th:first-child,
+.cpm-panel__table td:first-child {
+  text-align: left;
+}
+
+.cpm-panel__table thead th {
+  color: #6b6960;
+  font-weight: 500;
+}
+
+.cpm-panel__row--critical {
+  color: #b23b3a;
+  font-weight: 600;
+}

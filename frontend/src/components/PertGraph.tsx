@@ -1,19 +1,23 @@
 import { useEffect, useRef } from 'react';
 import cytoscape, { type Core } from 'cytoscape';
 import dagre from 'cytoscape-dagre';
+import nodeHtmlLabel from 'cytoscape-node-html-label';
 import type { Task, CPMResult } from '../types';
 import { calculateCPM } from '../lib/cpm';
-import { buildElements, cytoscapeStyle, dagreLayout } from '../lib/cytoscapeConfig';
+import { buildElements, cytoscapeStyle, dagreLayout, nodeHtmlLabelParams } from '../lib/cytoscapeConfig';
+import './PertGraph.css';
 
 cytoscape.use(dagre);
+cytoscape.use(nodeHtmlLabel);
 
 interface Props {
   tasks: Task[];
   cpmFromServer?: CPMResult | null;
   onNodeClick?: (taskId: string) => void;
+  onCpmComputed?: (cpm: CPMResult) => void;
 }
 
-export function PertGraph({ tasks, cpmFromServer, onNodeClick }: Props) {
+export function PertGraph({ tasks, cpmFromServer, onNodeClick, onCpmComputed }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<Core | null>(null);
 
@@ -21,6 +25,7 @@ export function PertGraph({ tasks, cpmFromServer, onNodeClick }: Props) {
     if (!containerRef.current || !tasks.length) return;
 
     const cpm = cpmFromServer ?? calculateCPM(tasks);
+    onCpmComputed?.(cpm);
 
     const enrichedTasks = tasks.map(t => {
       const node = cpm.nodes.find(n => n.id === t.id);
@@ -35,6 +40,7 @@ export function PertGraph({ tasks, cpmFromServer, onNodeClick }: Props) {
       layout: dagreLayout,
     });
 
+    (cyRef.current as any).nodeHtmlLabel(nodeHtmlLabelParams);
     applyCPMStyles(cyRef.current, cpm);
     cyRef.current.one('layoutstop', () => {
       cyRef.current?.resize();

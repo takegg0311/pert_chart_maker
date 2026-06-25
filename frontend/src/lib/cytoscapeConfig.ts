@@ -18,12 +18,6 @@ export const cytoscapeStyle = [
       'background-color': '#ffffff',
       'border-color': '#b4b2a9',
       'border-width': 0.5,
-      label: (ele: any) => `${ele.data('name')}\n${ele.data('duration')}日`,
-      'text-wrap': 'wrap',
-      'text-valign': 'center',
-      'text-halign': 'center',
-      'font-size': 12,
-      color: '#08060d',
     },
   },
   {
@@ -54,3 +48,27 @@ export const dagreLayout = {
   rankSep: 46,
   padding: 30,
 };
+
+export const nodeHtmlLabelParams = [
+  {
+    query: 'node',
+    halign: 'center' as const,
+    valign: 'center' as const,
+    halignBox: 'center' as const,
+    valignBox: 'center' as const,
+    tpl: (data: any) => `
+      <div class="aon-box ${data.isCritical ? 'aon-box--critical' : ''}">
+        <div class="aon-box__quad">
+          <span class="aon-box__cell aon-box__cell--es">${data.es ?? '-'}</span>
+          <span class="aon-box__cell aon-box__cell--ls">${data.ls ?? '-'}</span>
+        </div>
+        <div class="aon-box__name">${data.name}</div>
+        <div class="aon-box__duration">${data.duration}日</div>
+        <div class="aon-box__quad">
+          <span class="aon-box__cell aon-box__cell--ef">${data.ef ?? '-'}</span>
+          <span class="aon-box__cell aon-box__cell--lf">${data.lf ?? '-'}</span>
+        </div>
+      </div>
+    `,
+  },
+];
