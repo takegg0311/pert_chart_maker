@@ -23,7 +23,8 @@ venv/
 .firebase/
 firebase-debug.log
 firebase-debug.*.log
-.firebaserc.local
+frontend/.firebaserc
+!frontend/.firebaserc.example
 
 # Editor / OS
 .vscode/
