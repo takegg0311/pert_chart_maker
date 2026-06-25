@@ -60,12 +60,12 @@ export const nodeHtmlLabelParams = [
       <div class="aon-box ${data.isCritical ? 'aon-box--critical' : ''}">
         <div class="aon-box__quad">
           <span class="aon-box__cell aon-box__cell--es">${data.es ?? '-'}</span>
-          <span class="aon-box__cell aon-box__cell--ef">${data.ef ?? '-'}</span>
+          <span class="aon-box__cell aon-box__cell--ls">${data.ls ?? '-'}</span>
         </div>
         <div class="aon-box__name">${data.name}</div>
         <div class="aon-box__duration">${data.duration}日</div>
         <div class="aon-box__quad">
-          <span class="aon-box__cell aon-box__cell--ls">${data.ls ?? '-'}</span>
+          <span class="aon-box__cell aon-box__cell--ef">${data.ef ?? '-'}</span>
           <span class="aon-box__cell aon-box__cell--lf">${data.lf ?? '-'}</span>
         </div>
       </div>
