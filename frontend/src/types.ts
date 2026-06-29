@@ -5,6 +5,24 @@ export interface Task {
   predecessorIds: string[];
 }
 
+export interface GitHubTaskResponse {
+  id: string;
+  name: string;
+  duration: number;
+  predecessors: string[];
+  successors: string[];
+  state: string;
+}
+
+export interface GitHubProjectApiResponse {
+  tasks: GitHubTaskResponse[];
+}
+
+export interface GitHubProjectConfig {
+  projectUrl: string;
+  estimateField: string;
+}
+
 export interface CPMNode extends Task {
   es: number;
   ef: number;
