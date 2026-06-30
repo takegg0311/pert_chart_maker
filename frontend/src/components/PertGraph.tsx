@@ -27,9 +27,10 @@ export function PertGraph({ tasks, cpmFromServer, onNodeClick, onCpmComputed }: 
     const cpm = cpmFromServer ?? calculateCPM(tasks);
     onCpmComputed?.(cpm);
 
-    const enrichedTasks = tasks.map(t => {
+    const enrichedTasks = tasks.map((t, i) => {
       const node = cpm.nodes.find(n => n.id === t.id);
-      return { ...t, ...node };
+      const label = /^\d+$/.test(t.id) ? `#${t.id}` : `${i + 1}`;
+      return { ...t, ...node, label };
     });
 
     cyRef.current?.destroy();

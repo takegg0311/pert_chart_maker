@@ -15,6 +15,7 @@ export function CPMPanel({ cpm }: Props) {
       <table className="cpm-panel__table">
         <thead>
           <tr>
+            <th>#</th>
             <th>タスク</th>
             <th>工数</th>
             <th>ES</th>
@@ -25,17 +26,21 @@ export function CPMPanel({ cpm }: Props) {
           </tr>
         </thead>
         <tbody>
-          {cpm.nodes.map(n => (
-            <tr key={n.id} className={n.isCritical ? 'cpm-panel__row--critical' : ''}>
-              <td>{n.name}</td>
-              <td>{n.duration}</td>
-              <td>{n.es}</td>
-              <td>{n.ef}</td>
-              <td>{n.ls}</td>
-              <td>{n.lf}</td>
-              <td>{n.tf}</td>
-            </tr>
-          ))}
+          {cpm.nodes.map((n, i) => {
+            const label = /^\d+$/.test(n.id) ? `#${n.id}` : `${i + 1}`;
+            return (
+              <tr key={n.id} className={n.isCritical ? 'cpm-panel__row--critical' : ''}>
+                <td>{label}</td>
+                <td>{n.name}</td>
+                <td>{n.duration}</td>
+                <td>{n.es}</td>
+                <td>{n.ef}</td>
+                <td>{n.ls}</td>
+                <td>{n.lf}</td>
+                <td>{n.tf}</td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>

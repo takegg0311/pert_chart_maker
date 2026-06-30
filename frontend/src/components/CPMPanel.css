@@ -36,7 +36,9 @@
 }
 
 .cpm-panel__table th:first-child,
-.cpm-panel__table td:first-child {
+.cpm-panel__table td:first-child,
+.cpm-panel__table th:nth-child(2),
+.cpm-panel__table td:nth-child(2) {
   text-align: left;
 }
 
