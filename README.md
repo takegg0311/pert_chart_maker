@@ -42,10 +42,11 @@ npm run dev
 
 ```bash
 cd backend
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+# uv init       # 初回
+uv sync
+uv add -r requirements.txt
 cp .env.example .env   # GITHUB_TOKEN を設定
-uvicorn main:app --reload --port 8000
+uv run uvicorn main:app --reload --port 8000
 ```
 
 別ターミナルでフロントエンドを起動すると、Vite のプロキシ経由で `/api/gh` がバックエンドに転送されます。
