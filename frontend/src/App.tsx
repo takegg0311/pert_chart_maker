@@ -2,23 +2,39 @@ import { useState, useRef } from 'react';
 import { PertGraph } from './components/PertGraph';
 import { CPMPanel } from './components/CPMPanel';
 import { DurationLegend } from './components/DurationLegend';
+import { GitHubProjectForm } from './components/GitHubProjectForm';
 import { parseCSV, validateTasks } from './lib/csvParser';
-import { useTasks } from './hooks/useTasks';
+import { useGitHubProject } from './hooks/useGitHubProject';
 import type { Task, CPMResult } from './types';
 import './App.css';
 
-type Mode = 'idle' | 'csv' | 'backend';
+type Mode = 'idle' | 'csv' | 'github';
+
+function shortenProjectUrl(url: string): string {
+  try {
+    const parsed = new URL(url);
+    return parsed.pathname.replace(/^\/+/, '');
+  } catch {
+    return url;
+  }
+}
 
 function App() {
   const [mode, setMode] = useState<Mode>('idle');
   const [csvTasks, setCsvTasks] = useState<Task[]>([]);
   const [csvError, setCsvError] = useState<string | null>(null);
-  const [apiUrl, setApiUrl] = useState('');
   const [cpm, setCpm] = useState<CPMResult | null>(null);
-  const { tasks: dbTasks, connect } = useTasks();
+  const {
+    tasks: githubTasks,
+    config: githubConfig,
+    loading: githubLoading,
+    error: githubError,
+    fetchProject,
+    reset: resetGitHub,
+  } = useGitHubProject();
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const activeTasks = mode === 'csv' ? csvTasks : dbTasks;
+  const activeTasks = mode === 'csv' ? csvTasks : githubTasks;
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -32,27 +48,28 @@ function App() {
         setCsvTasks(tasks);
         setCsvError(null);
         setMode('csv');
-      } catch (err: any) {
-        setCsvError(err.message);
+      } catch (err: unknown) {
+        setCsvError(err instanceof Error ? err.message : 'CSV の読み込みに失敗しました');
       }
     };
     reader.readAsText(file, 'utf-8');
     e.target.value = '';
   };
 
-  const handleConnect = async () => {
-    const url = prompt('バックエンド API の URL:', 'http://localhost:8000');
-    if (!url) return;
-    setApiUrl(url);
-    try {
-      await connect(url);
-      setMode('backend');
-    } catch {
-      alert('接続に失敗しました。URL を確認してください。');
+  const handleGitHubSubmit = async (projectUrl: string, estimateField: string) => {
+    const success = await fetchProject(projectUrl, estimateField);
+    if (success) {
+      setMode('github');
     }
   };
 
-  const reset = () => { setMode('idle'); setCsvTasks([]); setCsvError(null); setCpm(null); };
+  const reset = () => {
+    setMode('idle');
+    setCsvTasks([]);
+    setCsvError(null);
+    setCpm(null);
+    resetGitHub();
+  };
 
   if (mode === 'idle') {
     return (
@@ -68,10 +85,15 @@ function App() {
               テンプレートをダウンロード
             </a>
           </div>
-          <div className="card" onClick={handleConnect}>
-            <div className="card-icon">🗄</div>
-            <h2>バックエンドに接続</h2>
-            <p>DB からタスクを読み込む</p>
+          <div className="card card--github">
+            <div className="card-icon">🐙</div>
+            <h2>GitHub Project</h2>
+            <p>Project の Issue からタスクを取得</p>
+            <GitHubProjectForm
+              loading={githubLoading}
+              error={githubError}
+              onSubmit={handleGitHubSubmit}
+            />
           </div>
         </div>
         {csvError && <pre className="error">{csvError}</pre>}
@@ -83,7 +105,9 @@ function App() {
     <div className="app">
       <header>
         <span className="mode-badge">
-          {mode === 'csv' ? '📄 CSV モード' : `🗄 ${apiUrl}`}
+          {mode === 'csv'
+            ? '📄 CSV モード'
+            : `🐙 ${githubConfig ? shortenProjectUrl(githubConfig.projectUrl) : 'GitHub Project'}`}
         </span>
         {mode === 'csv' && (
           <button onClick={() => fileRef.current?.click()}>
@@ -91,12 +115,19 @@ function App() {
             CSV を再読み込み
           </button>
         )}
-        {mode === 'backend' && (
-          <button onClick={() => connect(apiUrl)}>更新</button>
+        {mode === 'github' && githubConfig && (
+          <button
+            disabled={githubLoading}
+            onClick={() => fetchProject(githubConfig.projectUrl, githubConfig.estimateField)}
+          >
+            {githubLoading ? '更新中...' : '更新'}
+          </button>
         )}
         <button onClick={reset}>← 戻る</button>
       </header>
-      {csvError && <pre className="error">{csvError}</pre>}
+      {(csvError || githubError) && (
+        <pre className="error">{mode === 'csv' ? csvError : githubError}</pre>
+      )}
       <PertGraph tasks={activeTasks} onCpmComputed={setCpm} />
       <DurationLegend />
       {cpm && <CPMPanel cpm={cpm} />}

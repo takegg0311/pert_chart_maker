@@ -24,6 +24,56 @@
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
 
+.card--github {
+  cursor: default;
+}
+
+.card--github:hover {
+  box-shadow: none;
+}
+
+.github-form {
+  margin-top: 16px;
+  text-align: left;
+}
+
+.github-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.github-form__label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.github-form input {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.github-form button {
+  padding: 8px 16px;
+  border: 1px solid #24292f;
+  border-radius: 6px;
+  background: #24292f;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.github-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .card-icon {
   font-size: 40px;
 }
